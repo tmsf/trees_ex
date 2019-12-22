@@ -1,9 +1,9 @@
-defmodule AVLTree.MixProject do
+defmodule TreesEx.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :avl_tree,
+      app: :trees_ex,
       version: "0.1.0",
       elixir: "~> 1.9",
       start_permanent: Mix.env() == :prod,
