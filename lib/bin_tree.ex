@@ -1,6 +1,8 @@
 defmodule BinTree do
   defstruct val: nil, left: %Empty{}, right: %Empty{}
 
+  @type t :: %__MODULE__{}
+
   def insert(tree \\ %Empty{}, value)
 
   def insert(%Empty{}, value), do: %BinTree{:val => value}

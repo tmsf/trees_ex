@@ -1,6 +1,8 @@
 defmodule AVLTree do
   defstruct val: nil, left: %Empty{}, right: %Empty{}
 
+  @type t :: %__MODULE__{}
+
   def build([]), do: %Empty{}
 
   def build(list) do

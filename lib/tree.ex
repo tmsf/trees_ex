@@ -1,4 +1,7 @@
 defprotocol Tree do
+  import AVLTree
+  import BinTree
+  import Empty
   @doc "Common functions for Tree functions"
   @type tree() :: AVLTree.t() | BinTree.t() | Empty.t()
 
