@@ -1,13 +1,13 @@
 defprotocol Tree do
   @doc "Common functions for Tree functions"
-  @type tree() :: String.t()
+  @type tree() :: AVLTree.t() | BinTree.t() | Empty.t()
 
-  # def insert(tree) 
+  # def insert(tree)
 
-  @spec min(tree()) :: integer()
+  @spec min(tree()) :: integer() | nil
   def min(tree)
 
-  @spec max(tree()) :: integer()
+  @spec max(tree()) :: integer() | nil
   def max(tree)
 
   @spec flatten(tree()) :: [integer()]
@@ -29,16 +29,12 @@ defimpl Tree, for: Empty do
 end
 
 defimpl Tree, for: BinTree do
-  def min(tree \\ %Empty{})
-
   def min(tree) do
     case tree do
       %BinTree{:left => %Empty{}} -> tree.val
       %BinTree{:left => left_tree} -> min(left_tree)
     end
   end
-
-  def max(tree \\ %Empty{})
 
   def max(tree) do
     case tree do
@@ -58,9 +54,7 @@ end
 defimpl Tree, for: AVLTree do
   def min(tree \\ %Empty{})
 
-  def min(%Empty{}) do
-    nil
-  end
+  def min(%Empty{}), do: nil
 
   def min(tree) do
     case tree do

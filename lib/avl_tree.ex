@@ -1,11 +1,7 @@
 defmodule AVLTree do
   defstruct val: nil, left: %Empty{}, right: %Empty{}
 
-  def build(list \\ [])
-
-  def build([]) do
-    %Empty{}
-  end
+  def build([]), do: %Empty{}
 
   def build(list) do
     List.foldl(list, %Empty{}, fn item, tree -> insert(tree, item) end)
@@ -123,11 +119,7 @@ defmodule AVLTree do
     end
   end
 
-  def balanced?(tree \\ %Empty{})
-
-  def balanced?(%Empty{}) do
-    true
-  end
+  def balanced?(%Empty{}), do: true
 
   def balanced?(%AVLTree{:left => l, :right => r}) do
     cond do
@@ -138,43 +130,18 @@ defmodule AVLTree do
     end
   end
 
-  def height(tree \\ %Empty{})
-
-  def height(%Empty{}) do
-    0
-  end
+  def height(%Empty{}), do: 0
 
   def height(%AVLTree{:left => l, :right => r}) do
     1 + max(height(l), height(r))
   end
 
-  def left(tree \\ %Empty{})
+  def left(%Empty{}), do: %Empty{}
+  def left(%AVLTree{:left => l}), do: l
 
-  def left(%Empty{}) do
-    %Empty{}
-  end
+  def right(%Empty{}), do: %Empty{}
+  def right(%AVLTree{:right => r}), do: r
 
-  def left(%AVLTree{:left => l}) do
-    l
-  end
-
-  def right(tree \\ %Empty{})
-
-  def right(%Empty{}) do
-    %Empty{}
-  end
-
-  def right(%AVLTree{:right => l}) do
-    l
-  end
-
-  def value(tree \\ %Empty{})
-
-  def value(%Empty{}) do
-    %Empty{}
-  end
-
-  def value(%AVLTree{:val => v}) do
-    v
-  end
+  def value(%Empty{}), do: %Empty{}
+  def value(%AVLTree{:val => v}), do: v
 end
