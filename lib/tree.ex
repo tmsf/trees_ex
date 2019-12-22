@@ -1,7 +1,7 @@
 defprotocol Tree do
   @doc "Common functions for Tree functions"
 
-  @type tree() :: BinTree.tree() | BinTree.leaf()
+  @type tree() :: BinTree.tree()
 
   @spec min(tree()) :: integer() | nil
   def min(tree)
@@ -14,17 +14,11 @@ defprotocol Tree do
 end
 
 defimpl Tree, for: Empty do
-  def min(%Empty{}) do
-    nil
-  end
+  def min(%Empty{}), do: nil
 
-  def max(%Empty{}) do
-    nil
-  end
+  def max(%Empty{}), do: nil
 
-  def flatten(%Empty{}) do
-    []
-  end
+  def flatten(%Empty{}), do: []
 end
 
 defimpl Tree, for: BinTree do
