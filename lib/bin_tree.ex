@@ -21,7 +21,6 @@ defmodule BinTree do
   end
 
   defmodule AVLTree do
-
     # @type t :: %__MODULE__{}
 
     def build([]), do: %Empty{}
@@ -168,5 +167,4 @@ defmodule BinTree do
     def value(%Empty{}), do: %Empty{}
     def value(%BinTree{:val => v}), do: v
   end
-
 end

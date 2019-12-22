@@ -1,5 +1,4 @@
 defprotocol Tree do
-
   @doc "Common functions for Tree functions"
   @type tree() :: BinTree.t() | Empty.t()
 

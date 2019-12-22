@@ -1,7 +1,7 @@
 defmodule AVLTreeTest do
   use ExUnit.Case
   alias BinTree.AVLTree, as: AVLTree
-  
+
   doctest BinTree.AVLTree
 
   test "tree height of an empty tree is 0" do
