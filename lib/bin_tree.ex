@@ -1,9 +1,14 @@
 defmodule BinTree do
   defstruct val: nil, left: %Empty{}, right: %Empty{}
 
-  @type t :: %__MODULE__{}
-
-  def insert(tree \\ %Empty{}, value)
+  @type leaf :: %Empty{}
+  @type tree ::
+          leaf
+          | %__MODULE__{
+              left: tree | leaf,
+              right: tree | leaf,
+              val: integer
+            }
 
   def insert(%Empty{}, value), do: %BinTree{:val => value}
 
@@ -21,15 +26,11 @@ defmodule BinTree do
   end
 
   defmodule AVLTree do
-    # @type t :: %__MODULE__{}
-
     def build([]), do: %Empty{}
 
     def build(list) do
       List.foldl(list, %Empty{}, fn item, tree -> insert(tree, item) end)
     end
-
-    def insert(tree \\ %Empty{}, value)
 
     def insert(%Empty{}, value) do
       %BinTree{:val => value}
@@ -58,11 +59,7 @@ defmodule BinTree do
       end
     end
 
-    def rotate(tree \\ %Empty{})
-
-    def rotate(%Empty{}) do
-      %Empty{}
-    end
+    def rotate(%Empty{}), do: %Empty{}
 
     def rotate(tree = %BinTree{:val => v, :left => l, :right => r}) do
       cond do
