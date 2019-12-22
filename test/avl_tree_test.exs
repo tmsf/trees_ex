@@ -1,15 +1,17 @@
 defmodule AVLTreeTest do
   use ExUnit.Case
-  doctest AVLTree
+  alias BinTree.AVLTree, as: AVLTree
+  
+  doctest BinTree.AVLTree
 
   test "tree height of an empty tree is 0" do
     assert AVLTree.height(%Empty{}) == 0
   end
 
   test "tree height should be the size of longest branch" do
-    tree = %AVLTree{
-      :right => %AVLTree{
-        :right => %AVLTree{:val => 4},
+    tree = %BinTree{
+      :right => %BinTree{
+        :right => %BinTree{:val => 4},
         :val => 2
       },
       :val => 1
@@ -23,9 +25,9 @@ defmodule AVLTreeTest do
   end
 
   test "balanced tree should return true" do
-    balanced_tree = %AVLTree{
-      :left => %AVLTree{:val => 1},
-      :right => %AVLTree{:val => 3},
+    balanced_tree = %BinTree{
+      :left => %BinTree{:val => 1},
+      :right => %BinTree{:val => 3},
       :val => 2
     }
 
@@ -33,25 +35,25 @@ defmodule AVLTreeTest do
   end
 
   test "insert in empty tree" do
-    assert AVLTree.insert(%Empty{}, 10) == %AVLTree{:val => 10}
+    assert AVLTree.insert(%Empty{}, 10) == %BinTree{:val => 10}
   end
 
   test "insert a smaller value than the root" do
-    assert AVLTree.insert(%AVLTree{:val => 10}, 1) == %AVLTree{
-             :left => %AVLTree{:val => 1},
+    assert AVLTree.insert(%BinTree{:val => 10}, 1) == %BinTree{
+             :left => %BinTree{:val => 1},
              :val => 10
            }
   end
 
   test "inserting a value that unbalances a tree should return a balanced tree" do
-    to_be_unbalanced_tree = %AVLTree{
-      :right => %AVLTree{:val => 2},
+    to_be_unbalanced_tree = %BinTree{
+      :right => %BinTree{:val => 2},
       :val => 1
     }
 
-    balanced_after_insert = %AVLTree{
-      :left => %AVLTree{:val => 1},
-      :right => %AVLTree{:val => 3},
+    balanced_after_insert = %BinTree{
+      :left => %BinTree{:val => 1},
+      :right => %BinTree{:val => 3},
       :val => 2
     }
 
@@ -68,15 +70,15 @@ defmodule AVLTreeTest do
     #                          \
     #                          (6)
 
-    to_be_unbalanced_tree = %AVLTree{
-      :left => %AVLTree{:val => 1},
-      :right => %AVLTree{:left => %AVLTree{:val => 3}, :right => %AVLTree{:val => 5}, :val => 4},
+    to_be_unbalanced_tree = %BinTree{
+      :left => %BinTree{:val => 1},
+      :right => %BinTree{:left => %BinTree{:val => 3}, :right => %BinTree{:val => 5}, :val => 4},
       :val => 2
     }
 
-    balanced_tree = %AVLTree{
-      :left => %AVLTree{:val => 2, :left => %AVLTree{:val => 1}, :right => %AVLTree{:val => 3}},
-      :right => %AVLTree{:right => %AVLTree{:val => 6}, :val => 5},
+    balanced_tree = %BinTree{
+      :left => %BinTree{:val => 2, :left => %BinTree{:val => 1}, :right => %BinTree{:val => 3}},
+      :right => %BinTree{:right => %BinTree{:val => 6}, :val => 5},
       :val => 4
     }
 
@@ -84,9 +86,9 @@ defmodule AVLTreeTest do
   end
 
   test "should create a balanced tree based on a list" do
-    balanced_tree = %AVLTree{
-      :left => %AVLTree{:val => 2, :left => %AVLTree{:val => 1}, :right => %AVLTree{:val => 3}},
-      :right => %AVLTree{:right => %AVLTree{:val => 6}, :val => 5},
+    balanced_tree = %BinTree{
+      :left => %BinTree{:val => 2, :left => %BinTree{:val => 1}, :right => %BinTree{:val => 3}},
+      :right => %BinTree{:right => %BinTree{:val => 6}, :val => 5},
       :val => 4
     }
 
@@ -98,13 +100,13 @@ defmodule AVLTreeTest do
   end
 
   test "min value of one element tree is same element" do
-    assert Tree.min(%AVLTree{:val => 10}) == 10
+    assert Tree.min(%BinTree{:val => 10}) == 10
   end
 
   test "min value of complex tree is leftmost value" do
-    complex_tree = %AVLTree{
-      :left => %AVLTree{
-        :right => %AVLTree{:val => 8},
+    complex_tree = %BinTree{
+      :left => %BinTree{
+        :right => %BinTree{:val => 8},
         :val => 6
       },
       :val => 10
@@ -118,19 +120,19 @@ defmodule AVLTreeTest do
   end
 
   test "max value of one element tree is same element" do
-    assert Tree.max(%AVLTree{:val => 10}) == 10
+    assert Tree.max(%BinTree{:val => 10}) == 10
   end
 
   test "max value of complex tree is leftmost value" do
-    complex_tree = %AVLTree{
-      :left => %AVLTree{
-        :right => %AVLTree{
+    complex_tree = %BinTree{
+      :left => %BinTree{
+        :right => %BinTree{
           :val => 8
         },
         :val => 6
       },
-      :right => %AVLTree{
-        :right => %AVLTree{
+      :right => %BinTree{
+        :right => %BinTree{
           :val => 22
         },
         :val => 11
@@ -142,15 +144,15 @@ defmodule AVLTreeTest do
   end
 
   test "flatten tree will deliver an ordered array of values" do
-    complex_tree = %AVLTree{
-      :left => %AVLTree{
-        :right => %AVLTree{
+    complex_tree = %BinTree{
+      :left => %BinTree{
+        :right => %BinTree{
           :val => 8
         },
         :val => 6
       },
-      :right => %AVLTree{
-        :right => %AVLTree{
+      :right => %BinTree{
+        :right => %BinTree{
           :val => 22
         },
         :val => 11
@@ -162,7 +164,7 @@ defmodule AVLTreeTest do
   end
 
   test "Flatten of a single node will result on a single value list" do
-    complex_tree = %AVLTree{
+    complex_tree = %BinTree{
       :val => 8
     }
 
