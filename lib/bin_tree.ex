@@ -1,24 +1,54 @@
 defmodule BinTree do
-  defstruct val: nil, left: %Empty{}, right: %Empty{}
+  import Algae
 
-  @type leaf :: %Empty{}
-  @type tree ::
-          leaf
-          | %__MODULE__{
-              left: tree | leaf,
-              right: tree | leaf,
-              val: integer
-            }
+  alias BinTree.{Leaf, Node}
 
-  def insert(%Empty{}, value), do: %BinTree{:val => value}
+  defsum do
+    defdata(Leaf :: none())
 
-  def insert(tree = %BinTree{:val => v, :left => l, :right => r}, value) do
+    defdata Node do
+      val :: integer()
+      left :: BinTree.t() \\ BinTree.Leaf.new()
+      right :: BinTree.t() \\ BinTree.Leaf.new()
+    end
+  end
+
+  def min(%Leaf{}), do: nil
+
+  def min(tree) do
+    case tree do
+      %Node{:left => %Leaf{}} -> tree.val
+      %Node{:left => left_tree} -> min(left_tree)
+    end
+  end
+
+  def max(%Leaf{}), do: nil
+
+  def max(tree) do
+    case tree do
+      %Node{:right => %Leaf{}} -> tree.val
+      %Node{:right => r} -> max(r)
+    end
+  end
+
+  def flatten(%Leaf{}), do: []
+
+  def flatten(%Node{:left => l, :right => r, :val => v}) do
+    flatten(l) ++ [v] ++ flatten(r)
+  end
+  
+  @spec new() :: Leaf.t()
+  def new(), do: %Leaf{}
+
+  def insert(%Leaf{}, value), do: %Node{:val => value}
+
+  def insert(tree = %Node{:val => v, :left => l, :right => r}, value) do
     cond do
       v > value ->
-        %BinTree{:val => v, :left => insert(l, value), :right => r}
+        %Node{:val => v, :left => insert(l, value), :right => r}
 
       v < value ->
-        %BinTree{:val => v, :left => l, :right => insert(r, value)}
+        %Node{:val => v, :left => l, :right => insert(r, value)}
 
       true ->
         tree
@@ -26,20 +56,21 @@ defmodule BinTree do
   end
 
   defmodule AVLTree do
-    def build([]), do: %Empty{}
+
+    def build([]), do: %Leaf{}
 
     def build(list) do
-      List.foldl(list, %Empty{}, fn item, tree -> insert(tree, item) end)
+      List.foldl(list, %Leaf{}, fn item, tree -> insert(tree, item) end)
     end
 
-    def insert(%Empty{}, value) do
-      %BinTree{:val => value}
+    def insert(%Leaf{}, value) do
+      %Node{:val => value}
     end
 
-    def insert(tree = %BinTree{:val => node_value}, value) do
+    def insert(tree = %Node{:val => node_value}, value) do
       cond do
         node_value > value ->
-          %BinTree{
+          %Node{
             :val => tree.val,
             :left => insert(tree.left, value),
             :right => tree.right
@@ -47,7 +78,7 @@ defmodule BinTree do
           |> rotate
 
         node_value < value ->
-          %BinTree{
+          %Node{
             :val => tree.val,
             :left => tree.left,
             :right => insert(tree.right, value)
@@ -59,19 +90,19 @@ defmodule BinTree do
       end
     end
 
-    def rotate(%Empty{}), do: %Empty{}
+    def rotate(%Leaf{}), do: %Leaf{}
 
-    def rotate(tree = %BinTree{:val => v, :left => l, :right => r}) do
+    def rotate(tree = %Node{:val => v, :left => l, :right => r}) do
       cond do
         not balanced?(l) ->
-          %BinTree{
+          %Node{
             :val => v,
             :left => rotate(l),
             :right => r
           }
 
         not balanced?(r) ->
-          %BinTree{
+          %Node{
             :val => v,
             :left => l,
             :right => rotate(r)
@@ -79,9 +110,9 @@ defmodule BinTree do
 
         # SR RR
         height(l) + 1 < height(r) && height(left(r)) < height(right(r)) ->
-          %BinTree{
+          %Node{
             :val => value(r),
-            :left => %BinTree{
+            :left => %Node{
               :val => v,
               :left => l,
               :right => left(r)
@@ -91,10 +122,10 @@ defmodule BinTree do
 
         # SR LL
         height(r) + 1 < height(l) && height(right(l)) < height(left(l)) ->
-          %BinTree{
+          %Node{
             :val => value(l),
             :left => left(l),
-            :right => %BinTree{
+            :right => %Node{
               :val => v,
               :left => right(l),
               :right => r
@@ -103,14 +134,14 @@ defmodule BinTree do
 
         # DR RL
         height(l) + 1 < height(r) && height(left(r)) > height(right(r)) ->
-          %BinTree{
+          %Node{
             :val => value(left(r)),
-            :left => %BinTree{
+            :left => %Node{
               :val => v,
               :left => l,
               :right => left(left(r))
             },
-            :right => %BinTree{
+            :right => %Node{
               :val => value(r),
               :left => right(left(r)),
               :right => right(r)
@@ -119,14 +150,14 @@ defmodule BinTree do
 
         # DR LR
         height(r) + 1 < height(l) && height(right(l)) > height(left(l)) ->
-          %BinTree{
+          %Node{
             :val => value(right(l)),
-            :left => %BinTree{
+            :left => %Node{
               :val => value(l),
               :left => left(l),
               :right => left(right(l))
             },
-            :right => %BinTree{
+            :right => %Node{
               :val => v,
               :left => right(right(l)),
               :right => r
@@ -138,9 +169,9 @@ defmodule BinTree do
       end
     end
 
-    def balanced?(%Empty{}), do: true
+    def balanced?(%Leaf{}), do: true
 
-    def balanced?(%BinTree{:left => l, :right => r}) do
+    def balanced?(%Node{:left => l, :right => r}) do
       cond do
         not balanced?(l) -> false
         not balanced?(r) -> false
@@ -149,19 +180,19 @@ defmodule BinTree do
       end
     end
 
-    def height(%Empty{}), do: 0
+    def height(%Leaf{}), do: 0
 
-    def height(%BinTree{:left => l, :right => r}) do
+    def height(%Node{:left => l, :right => r}) do
       1 + max(height(l), height(r))
     end
 
-    def left(%Empty{}), do: %Empty{}
-    def left(%BinTree{:left => l}), do: l
+    def left(%Leaf{}), do: %Leaf{}
+    def left(%Node{:left => l}), do: l
 
-    def right(%Empty{}), do: %Empty{}
-    def right(%BinTree{:right => r}), do: r
+    def right(%Leaf{}), do: %Leaf{}
+    def right(%Node{:right => r}), do: r
 
-    def value(%Empty{}), do: %Empty{}
-    def value(%BinTree{:val => v}), do: v
+    def value(%Leaf{}), do: %Leaf{}
+    def value(%Node{:val => v}), do: v
   end
 end

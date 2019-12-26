@@ -1,3 +1,5 @@
+alias BinTree.{Leaf, Node}
+
 defprotocol Tree do
   @doc "Common functions for Tree functions"
 
@@ -12,63 +14,37 @@ defprotocol Tree do
   @spec flatten(tree()) :: [integer()]
   def flatten(tree)
 end
-
-defimpl Tree, for: Empty do
-  def min(%Empty{}), do: nil
-
-  def max(%Empty{}), do: nil
-
-  def flatten(%Empty{}), do: []
-end
-
-defimpl Tree, for: BinTree do
-  def min(%Empty{}), do: nil
-
-  def min(%BinTree{:val => val, :left => l}) do
-    case l do
-      %Empty{} -> val
-      _ -> min(l)
-    end
-  end
-
-  def max(%Empty{}), do: nil
-
-  def max(%BinTree{:val => val, :right => r}) do
-    case r do
-      %Empty{} -> val
-      _ -> max(r)
-    end
-  end
-
-  def flatten(%Empty{}), do: []
-
-  def flatten(%BinTree{:left => l, :right => r, :val => v}) do
-    flatten(l) ++ [v] ++ flatten(r)
-  end
-end
-
-defimpl Tree, for: AVLTree do
-  def min(%Empty{}), do: nil
-
-  def min(tree) do
-    case tree do
-      %BinTree{:left => %Empty{}} -> tree.val
-      %BinTree{:left => left_tree} -> min(left_tree)
-    end
-  end
-
-  def max(%Empty{}), do: nil
-
-  def max(tree) do
-    case tree do
-      %BinTree{:right => %Empty{}} -> tree.val
-      %BinTree{:right => r} -> max(r)
-    end
-  end
-
-  def flatten(%Empty{}), do: []
-
-  def flatten(%BinTree{:left => l, :right => r, :val => v}) do
-    flatten(l) ++ [v] ++ flatten(r)
-  end
-end
+# 
+# defimpl Tree, for: Leaf do
+#   def min(%Leaf{}), do: nil
+#
+#   def max(%Leaf{}), do: nil
+#
+#   def flatten(%Leaf{}), do: []
+# end
+#
+# defimpl Tree, for: Node do
+#   def min(%Leaf{}), do: nil
+#
+#   def min(tree) do
+#     case tree do
+#       %Node{:left => %Leaf{}} -> tree.val
+#       %Node{:left => left_tree} -> min(left_tree)
+#     end
+#   end
+#
+#   def max(%Leaf{}), do: nil
+#
+#   def max(tree) do
+#     case tree do
+#       %Node{:right => %Leaf{}} -> tree.val
+#       %Node{:right => r} -> max(r)
+#     end
+#   end
+#
+#   def flatten(%Leaf{}), do: []
+#
+#   def flatten(%Node{:left => l, :right => r, :val => v}) do
+#     flatten(l) ++ [v] ++ flatten(r)
+#   end
+# end
